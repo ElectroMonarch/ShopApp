@@ -9,9 +9,15 @@ import { Category } from 'src/app/model/category.model';
 export class CategoryListComponent implements OnInit {
 
   @Input() data!: Category[];
+  selectedCategory: Category | null = null;
+
   constructor() { }
 
   ngOnInit() {
+  }
+
+  changeCategory(category: Category) {
+    this.selectedCategory = category;
   }
 
 }

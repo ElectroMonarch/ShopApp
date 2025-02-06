@@ -12,15 +12,38 @@ import { Category } from '../model/category.model';
     `]
 })
 export class ShopComponent {
+    public selectedCategory: Category | undefined;
+    public productsPerPage = 3;
+    public selectedPage = 1;
+
+
+    //1. sayfa * 3 ürün => 3 (0,3)
+
     constructor(
         private productRepository: ProductRepository,
-        private categoryRepository: CategoryRepository) {}
+        private categoryRepository: CategoryRepository) { }
 
     get products(): Product[] {
-        return this.productRepository.getProducts();
+        let index = (this.selectedPage - 1) * this.productsPerPage;
+        return this.productRepository.getProducts(this.selectedCategory).slice(index, index + this.productsPerPage);
+    }
+
+    get pageNumbers(): number[] {
+        return Array(
+            Math.ceil(this.productRepository.getProducts(this.selectedCategory).length / this.productsPerPage))
+            .fill(0)
+            .map((a, i) => i + 1)
+    }
+
+    changePage(p: number) {
+        this.selectedPage = p;
     }
 
     get categories(): Category[] {
         return this.categoryRepository.getCategories();
+    }
+
+    changeCategory(newCategory?: Category) {
+        this.selectedCategory = newCategory;
     }
 }
